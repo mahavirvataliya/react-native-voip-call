@@ -65,7 +65,7 @@ public class RNVoipRingtunePlayer {
         public void cancelWithTimeOut(ReadableMap jsonObject){
             int duration = jsonObject.getInt("duration");
             final ReadableMap json = jsonObject;
-            new android.os.Handler().postDelayed(
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
                     new Runnable() {
                         public void run() {
                             if(mMediaPlayer.isPlaying()) {
