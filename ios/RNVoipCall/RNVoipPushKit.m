@@ -6,8 +6,8 @@
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTUtils.h>
 
-NSString *const RNVoipRemoteNotificationsRegistered = @"voipRemoteNotificationsRegistered";
-NSString *const RNVoipRemoteNotificationReceived = @"voipRemoteNotificationReceived";
+NSString *const RNVoipCallRemoteNotificationsRegistered = @"voipCallRemoteNotificationsRegistered";
+NSString *const RNVoipCallRemoteNotificationReceived = @"voipCallRemoteNotificationReceived";
 
 static NSString *RCTCurrentAppBackgroundState()
 {
@@ -66,11 +66,11 @@ static NSMutableDictionary<NSString *, RNVoipPushNotificationCompletion> *comple
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleRemoteNotificationsRegistered:)
-                                                 name:RNVoipRemoteNotificationsRegistered
+                                                 name:RNVoipCallRemoteNotificationsRegistered
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleRemoteNotificationReceived:)
-                                                 name:RNVoipRemoteNotificationReceived
+                                                 name:RNVoipCallRemoteNotificationReceived
                                                object:nil];
 }
 
@@ -146,7 +146,7 @@ static NSMutableDictionary<NSString *, RNVoipPushNotificationCompletion> *comple
     for (NSUInteger i = 0; i < voipTokenLength; i++) {
         [hexString appendFormat:@"%02x", bytes[i]];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:RNVoipRemoteNotificationsRegistered
+    [[NSNotificationCenter defaultCenter] postNotificationName:RNVoipCallRemoteNotificationsRegistered
                                                         object:self
                                                       userInfo:@{@"deviceToken" : [hexString copy]}];
 }
@@ -154,7 +154,7 @@ static NSMutableDictionary<NSString *, RNVoipPushNotificationCompletion> *comple
 + (void)didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type
 {
     NSLog(@"[RNVoipPushKit] didReceiveIncomingPushWithPayload payload.dictionaryPayload = %@, type = %@", payload.dictionaryPayload, type);
-    [[NSNotificationCenter defaultCenter] postNotificationName:RNVoipRemoteNotificationReceived
+    [[NSNotificationCenter defaultCenter] postNotificationName:RNVoipCallRemoteNotificationReceived
                                                         object:self
                                                       userInfo:payload.dictionaryPayload];
 }
@@ -162,7 +162,7 @@ static NSMutableDictionary<NSString *, RNVoipPushNotificationCompletion> *comple
 - (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
 {
     NSLog(@"[RNVoipPushKit] handleRemoteNotificationsRegistered notification.userInfo = %@", notification.userInfo);
-    [_bridge.eventDispatcher sendDeviceEventWithName:@"voipRemoteNotificationsRegistered"
+    [_bridge.eventDispatcher sendDeviceEventWithName:@"voipCallRemoteNotificationsRegistered"
                                                 body:notification.userInfo];
 }
 
@@ -171,7 +171,7 @@ static NSMutableDictionary<NSString *, RNVoipPushNotificationCompletion> *comple
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
 {
     NSLog(@"[RNVoipPushKit] handleRemoteNotificationReceived notification.userInfo = %@", notification.userInfo);
-    [_bridge.eventDispatcher sendDeviceEventWithName:@"voipRemoteNotificationReceived"
+    [_bridge.eventDispatcher sendDeviceEventWithName:@"voipCallRemoteNotificationReceived"
                                                 body:notification.userInfo];
 }
 
