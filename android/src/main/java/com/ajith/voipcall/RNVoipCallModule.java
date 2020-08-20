@@ -12,7 +12,7 @@ import android.util.Log;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
-
+import java.util.ArrayList;
 
 public class RNVoipCallModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
@@ -22,14 +22,25 @@ public class RNVoipCallModule extends ReactContextBaseJavaModule implements Acti
   private RNVoipSendData sendjsData;
   public static final String LogTag = "RNVoipCall";
 
+  private ArrayList<Intent> intentArray 
+            = new ArrayList<Intent>(); 
+
   @Override
   public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-    sendjsData.sentEventToJsModule(intent);
+    if(sendjsData != null) {
+      sendjsData.sentEventToJsModule(intent);
+    } else {
+      intentArray.add(intent);
+    }
   }
 
   @Override
   public void onNewIntent(Intent intent){
-    sendjsData.sentEventToJsModule(intent);
+    if(sendjsData != null) {
+      sendjsData.sentEventToJsModule(intent);
+    } else {
+      intentArray.add(intent);
+    }
   }
 
 
@@ -40,6 +51,13 @@ public class RNVoipCallModule extends ReactContextBaseJavaModule implements Acti
     Application applicationContext = (Application) reactContext.getApplicationContext();
     rnVoipNotificationHelper = new RNVoipNotificationHelper(applicationContext);
     sendjsData = new RNVoipSendData(reactContext);
+
+    for (int i = 0; i < intentArray.size(); i++) {
+      sendjsData.sentEventToJsModule(intentArray.get(i));
+    }
+
+    intentArray.clear(); 
+    
   }
 
   @Override

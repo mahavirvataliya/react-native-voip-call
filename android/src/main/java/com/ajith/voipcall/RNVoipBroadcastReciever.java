@@ -18,10 +18,10 @@ public class RNVoipBroadcastReciever extends  BroadcastReceiver {
             case "callDismiss":
                 RNVoipRingtunePlayer.getInstance(context).stopMusic();
                 rnVoipNotificationHelper.clearNotification(notificationId);
-               // rnVoipNotificationHelper.showMissCallNotification(intent.getStringExtra("missedCallTitle"), intent.getStringExtra("missedCallBody"), intent.getStringExtra("callerId"));
+               rnVoipNotificationHelper.showMissCallNotification(intent.getStringExtra("missedCallTitle"), intent.getStringExtra("missedCallBody"), intent.getStringExtra("callerId"));
                 break;
             case "callTimeOut":
-               // rnVoipNotificationHelper.showMissCallNotification(intent.getStringExtra("missedCallTitle"), intent.getStringExtra("missedCallBody"), intent.getStringExtra("callerId"));
+               rnVoipNotificationHelper.showMissCallNotification(intent.getStringExtra("missedCallTitle"), intent.getStringExtra("missedCallBody"), intent.getStringExtra("callerId"));
                 break;
             default:
                 break;

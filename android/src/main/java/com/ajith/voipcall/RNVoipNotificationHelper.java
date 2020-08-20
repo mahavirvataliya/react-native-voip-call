@@ -14,7 +14,10 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import com.facebook.react.bridge.ReadableMap;
 
 public class RNVoipNotificationHelper {
@@ -47,6 +50,22 @@ public class RNVoipNotificationHelper {
         sendNotification(jsonObject);
     }
 
+    
+
+
+
+    private Spannable getActionText(String stringRes, int colorRes) {
+        Spannable spannable = new SpannableString(stringRes);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+        // This will only work for cases where the Notification.Builder has a fullscreen intent set
+        // Notification.Builder that does not have a full screen intent will take the color of the
+        // app and the following leads to a no-op.
+        spannable.setSpan(
+            new ForegroundColorSpan(colorRes), 0, spannable.length(), 0);
+        }
+        return spannable;
+    }
+
 
     public void sendNotification(ReadableMap json){
         int notificationID = json.getInt("notificationId");
@@ -75,8 +94,16 @@ public class RNVoipNotificationHelper {
                 .setContentTitle(json.getString("notificationTitle"))
                 .setSound(sounduri)
                 .setContentText(json.getString("notificationBody"))
-                .addAction(0, json.getString("answerActionTitle"), getPendingIntent(notificationID, "callAnswer",json))
-                .addAction(0, json.getString("declineActionTitle"), callDismissIntent)
+                .addAction(0,
+                         getActionText(
+                             json.getString("declineActionTitle"), Color.parseColor("#800000")),
+                             callDismissIntent)
+                .addAction(0,
+                         getActionText(
+                             json.getString("answerActionTitle"), Color.parseColor("#008000")),
+                             getPendingIntent(notificationID, "callDismiss",json))
+                // .addAction(0, json.getString("answerActionTitle"), getPendingIntent(notificationID, "callAnswer",json))
+                // .addAction(0, json.getString("declineActionTitle"), callDismissIntent)
                 .build();
 
         NotificationManager notificationManager = notificationManager();
