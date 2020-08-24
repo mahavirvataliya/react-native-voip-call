@@ -101,7 +101,7 @@ public class RNVoipNotificationHelper {
                 .addAction(0,
                          getActionText(
                              json.getString("answerActionTitle"), Color.parseColor("#008000")),
-                             getPendingIntent(notificationID, "callDismiss",json))
+                             getPendingIntent(notificationID, "callAnswer",json))
                 // .addAction(0, json.getString("answerActionTitle"), getPendingIntent(notificationID, "callAnswer",json))
                 // .addAction(0, json.getString("declineActionTitle"), callDismissIntent)
                 .build();
